@@ -1,3 +1,3 @@
 # PlanRadar
 
-download the file andrun the createTicket.pyfrom terminal.
+download the file and run the createTicket.py from terminal.
