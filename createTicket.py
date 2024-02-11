@@ -32,6 +32,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             response = json.loads(component.text)
             print(response['data'][0]['id'])
             self.createForm(response['data'][0]['id'],project_id)
+            return component.status_code
         else:
             return component.status_code
         
@@ -45,20 +46,22 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         if form.status_code==200:
             response = json.loads(form.text)
             print(response['data']['id'])
-            self.createTicket(componentId,response['data']['id'],project_id)
+            self.createTicket(project_id,componentId,response['data']['id'])
         else:
             print(form.status_code)
             return form.status_code
 
     def createTicket(self,project_id,ComponentId,TicketId):
-        data='{"Ticket":{"attributes":{"uuid": ""35b03889-e759-4ded-b848-24337eea10d2"","subject": ""Task"","status-id": "1","component-id": {'"{ComponentId}","ticket-type-id"'}: "{TicketId}","customer-id": "ymjxnx"}}}'
+        data='{"data":{"attributes":{"subject":"Task","ticket-type-id":"{TicketId}","status-id":1,"component-id":"{ComponentId}","priority-id": 1,"uuid": "b2b07dcb-638e-4c20-9b6b-b55f19163b2a"}}}'
         header={'accept': 'application/json','X-PlanRadar-API-Key':'13d9f9c76c0733d30683e8b1c58717bff089e224a396a43d37874caa6a3cf7cd6c800116567b4a82b9da885a214676078192139a4d89cb711a1b604795956a9d365bd4147f753e42194c9f550277ab70'}
         Ticket =requests.post('https://www.planradar.com/api/v1/1255753/projects/{0}/tickets'.format(project_id),data=data,headers=header)
         print(Ticket.request.body)
         if Ticket.status_code==200:
             Ticket = json.loads(Ticket.text)
-            return Ticket.status_codes
+            print(Ticket.status_code)
+            return Ticket.status_code
         else:
+            print(Ticket.status_code)
             return Ticket.status_code
         
     def do_POST(self):
@@ -70,9 +73,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             if response == 200:
                 self.send_response(200,"Ticket Create Successfully")
                 print("Ticket Create Successfully")
-                print(response.text)
             else:
                 self.send_response(500,"Something went wrong")
+                print("someting went wrong")
                 print(f"Error: {response}")
 
 
